@@ -6,7 +6,7 @@
  */
 
 window.addEventListener('DOMContentLoaded', function() {
-    console.log('Popover Demo v2.3 - CSS Anchor Positioning (position-try-options)');
+    console.log('Popover Demo v2.4 - CSS Anchor Positioning (with position-visibility)');
     
     // Announce popover content to screen readers using a dedicated live region
     function announceOnHover(popover) {
