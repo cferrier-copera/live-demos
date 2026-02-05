@@ -10,6 +10,7 @@ body {
     margin: 0;
     box-sizing: border-box;
     min-height: 100vh;
+    filter: url(#gooey);
 }
 
 .login-container {
@@ -28,7 +29,6 @@ body {
 
 .gooey-container {
     display: inline;
-    filter: url(#gooey);
 }
 label {
     display: inline;
@@ -79,6 +79,7 @@ button[type="submit"]:hover {
     bottom: anchor(bottom);
     top: auto;
     left: auto;
+    margin-right: 0;
 }
 
 @position-try --popover-below {
@@ -122,7 +123,7 @@ button[type="submit"]:hover {
     max-width: 13.75rem;
     z-index: 10;
     pointer-events: auto;
-    box-shadow: 0 0.125rem 0.5rem rgba(0,0,0,0.12);
+    box-shadow: none;
     position-visibility: anchors-visible;
     inset: auto;
 }
@@ -142,6 +143,7 @@ button[type="submit"]:hover {
     position-anchor: --username-anchor;
     left: anchor(right);
     bottom: anchor(bottom);
+    margin-left: 0;
     position-try-fallbacks: --popover-left, --popover-above, --popover-center-below, --popover-center-above, --popover-below;
 }
 
@@ -149,6 +151,7 @@ button[type="submit"]:hover {
     position-anchor: --password-anchor;
     left: anchor(right);
     bottom: anchor(bottom);
+    margin-left: 0;
     position-try-fallbacks: --popover-left, --popover-above, --popover-center-below, --popover-center-above, --popover-below;
 }
 
