@@ -25,6 +25,11 @@ body {
     margin-bottom: 1.5rem;
     position: relative;
 }
+
+.gooey-container {
+    display: inline;
+    filter: url(#gooey);
+}
 label {
     display: inline;
     margin-bottom: 0.5rem;
