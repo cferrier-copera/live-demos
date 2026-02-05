@@ -48,33 +48,6 @@ window.addEventListener('DOMContentLoaded', function() {
     // Add class to disable CSS anchor positioning
     document.documentElement.classList.add('js-positioning');
     
-    // Function to ensure screen reader announces popover content
-    function announcePopover(popover) {
-        // Get the text content span (excluding the close button)
-        const contentSpan = popover.querySelector('span[id$="-content"]');
-        if (!contentSpan) return; // Exit if no content span found
-        
-        const textContent = contentSpan.textContent.trim();
-        const closeBtn = popover.querySelector('.popover-close');
-        
-        // Store close button HTML
-        const closeBtnHTML = closeBtn ? closeBtn.outerHTML : '';
-        
-        // Clear and restore content to trigger announcement
-        popover.innerHTML = '';
-        setTimeout(function() {
-            popover.innerHTML = closeBtnHTML + '<span id="' + contentSpan.id + '">' + textContent + '</span>';
-            // Restore the close button event listener
-            const newCloseBtn = popover.querySelector('.popover-close');
-            if (newCloseBtn) {
-                newCloseBtn.addEventListener('click', function(e) {
-                    popover.hidePopover();
-                    e.stopPropagation();
-                });
-            }
-        }, 10);
-    }
-    
     // Function to position popover with JavaScript fallback
     function positionPopover(popover, anchor) {
         if (supportsAnchorPositioning) return; // Let CSS handle it
@@ -166,7 +139,6 @@ window.addEventListener('DOMContentLoaded', function() {
         icon.addEventListener('mouseenter', function() {
             openedByHover = true;
             popover.showPopover();
-            announcePopover(popover);
             // Use setTimeout to ensure popover is rendered before positioning
             setTimeout(function() {
                 positionPopover(popover, icon);
@@ -181,7 +153,6 @@ window.addEventListener('DOMContentLoaded', function() {
                 popover.hidePopover();
             } else {
                 popover.showPopover();
-                announcePopover(popover);
                 // Use setTimeout to ensure popover is rendered before positioning
                 setTimeout(function() {
                     positionPopover(popover, icon);
