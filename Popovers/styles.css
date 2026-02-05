@@ -137,7 +137,7 @@ button[type="submit"]:hover {
     bottom: anchor(bottom);
     top: auto;
     right: auto;
-    position-try-fallbacks: --popover-below, --popover-left, --popover-above, --popover-center-below, --popover-center-above;
+    position-try-options: --popover-below, --popover-left, --popover-above, --popover-center-below, --popover-center-above;
 }
 
 #password-tip {
@@ -146,7 +146,7 @@ button[type="submit"]:hover {
     bottom: anchor(bottom);
     top: auto;
     right: auto;
-    position-try-fallbacks: --popover-below, --popover-left, --popover-above, --popover-center-below, --popover-center-above;
+    position-try-options: --popover-below, --popover-left, --popover-above, --popover-center-below, --popover-center-above;
 }
 
 .form-group {

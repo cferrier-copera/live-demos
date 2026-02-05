@@ -6,7 +6,7 @@
  */
 
 window.addEventListener('DOMContentLoaded', function() {
-    console.log('Popover Demo v2.2 - CSS Anchor Positioning');
+    console.log('Popover Demo v2.3 - CSS Anchor Positioning (position-try-options)');
     
     // Announce popover content to screen readers using a dedicated live region
     function announceOnHover(popover) {
@@ -30,12 +30,6 @@ window.addEventListener('DOMContentLoaded', function() {
         setTimeout(function() {
             announcer.textContent = '';
         }, 3000);
-    }
-    
-    // JavaScript positioning temporarily disabled - using CSS anchor positioning
-    function positionPopover(popover, anchor) {
-        // CSS anchor positioning handles this
-        return;
     }
 
     document.querySelectorAll('.tooltip-icon').forEach(function(icon) {
