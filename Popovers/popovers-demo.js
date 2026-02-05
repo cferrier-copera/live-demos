@@ -6,7 +6,7 @@
  */
 
 window.addEventListener('DOMContentLoaded', function() {
-    console.log('Popover Demo v2.9 - Reverted fallback order');
+    console.log('Popover Demo v3.0 - Gooey filter effect added');
     
     // ========================================
     // UTILITY FUNCTIONS
