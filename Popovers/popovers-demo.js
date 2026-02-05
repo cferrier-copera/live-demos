@@ -12,6 +12,8 @@
  */
 
 window.addEventListener('DOMContentLoaded', function() {
+    console.log('Popover Demo v2.0 - CSS Anchor Positioning');
+    
     // Check if browser supports Popover API
     const supportsPopover = typeof HTMLElement.prototype.showPopover === 'function';
     
