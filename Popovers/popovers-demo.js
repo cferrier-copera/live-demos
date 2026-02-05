@@ -48,6 +48,18 @@ window.addEventListener('DOMContentLoaded', function() {
     // Add class to disable CSS anchor positioning
     document.documentElement.classList.add('js-positioning');
     
+    // Force screen reader announcement on hover by toggling aria-live
+    function announceOnHover(popover) {
+        // Only announce if opened by hover (not keyboard focus)
+        const wasLive = popover.getAttribute('aria-live');
+        popover.setAttribute('aria-live', 'assertive');
+        setTimeout(function() {
+            if (wasLive) {
+                popover.setAttribute('aria-live', wasLive);
+            }
+        }, 100);
+    }
+    
     // Function to position popover with JavaScript fallback
     function positionPopover(popover, anchor) {
         if (supportsAnchorPositioning) return; // Let CSS handle it
@@ -139,6 +151,7 @@ window.addEventListener('DOMContentLoaded', function() {
         icon.addEventListener('mouseenter', function() {
             openedByHover = true;
             popover.showPopover();
+            announceOnHover(popover);
             // Use setTimeout to ensure popover is rendered before positioning
             setTimeout(function() {
                 positionPopover(popover, icon);
