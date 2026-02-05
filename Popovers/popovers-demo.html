@@ -13,20 +13,20 @@
 		<form>
 			<div class="form-group">
 				<label for="username">Username</label>
-				<button type="button" class="tooltip-icon" id="username-anchor" popovertarget="username-tip" aria-label="Username info" aria-describedby="username-tip">?</button>
-				<div id="username-tip" popover class="popover" role="status" aria-live="polite" aria-atomic="true">
+				<button type="button" class="tooltip-icon" id="username-anchor" popovertarget="username-tip" aria-label="Username info" aria-describedby="username-tip-content">?</button>
+				<div id="username-tip" popover class="popover" role="status" aria-live="assertive" aria-atomic="true">
 					<button type="button" class="popover-close" aria-label="Close username tooltip">×</button>
-					Enter your unique username. It is case-sensitive.
+					<span id="username-tip-content">Enter your unique username. It is case-sensitive.</span>
 				</div>
 				<input type="text" id="username" name="username" autocomplete="username">
 				<a href="#" class="forgot-link" id="forgot-username">Forgot username?</a>
 			</div>
 			<div class="form-group">
 				<label for="password">Password</label>
-				<button type="button" class="tooltip-icon" id="password-anchor" popovertarget="password-tip" aria-label="Password info" aria-describedby="password-tip">?</button>
-				<div id="password-tip" popover class="popover" role="status" aria-live="polite" aria-atomic="true">
+				<button type="button" class="tooltip-icon" id="password-anchor" popovertarget="password-tip" aria-label="Password info" aria-describedby="password-tip-content">?</button>
+				<div id="password-tip" popover class="popover" role="status" aria-live="assertive" aria-atomic="true">
 					<button type="button" class="popover-close" aria-label="Close password tooltip">×</button>
-					Your password must be at least 8 characters long and contain a number.
+					<span id="password-tip-content">Your password must be at least 8 characters long and contain a number.</span>
 				</div>
 				<input type="password" id="password" name="password" autocomplete="current-password">
 				<a href="#" class="forgot-link" id="forgot-password">Forgot password?</a>
@@ -34,6 +34,6 @@
 			<button type="submit">Login</button>
 		</form>
 	</div>
-	<script src="popovers-demo.js?v=1.2"></script>
+	<script src="popovers-demo.js?v=1.3"></script>
 </body>
 </html>

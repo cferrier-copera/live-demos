@@ -50,10 +50,25 @@ window.addEventListener('DOMContentLoaded', function() {
     
     // Function to ensure screen reader announces popover content
     function announcePopover(popover) {
-        // Temporarily toggle aria-live to force announcement
-        popover.setAttribute('aria-live', 'off');
+        // Method 1: Force re-announcement by clearing and re-adding content
+        const textContent = popover.textContent.trim();
+        const closeBtn = popover.querySelector('.popover-close');
+        
+        // Store close button
+        const closeBtnHTML = closeBtn ? closeBtn.outerHTML : '';
+        
+        // Clear and restore content to trigger announcement
+        popover.innerHTML = '';
         setTimeout(function() {
-            popover.setAttribute('aria-live', 'polite');
+            popover.innerHTML = closeBtnHTML + textContent;
+            // Restore the close button event listener
+            const newCloseBtn = popover.querySelector('.popover-close');
+            if (newCloseBtn) {
+                newCloseBtn.addEventListener('click', function(e) {
+                    popover.hidePopover();
+                    e.stopPropagation();
+                });
+            }
         }, 10);
     }
     
