@@ -129,30 +129,25 @@ button[type="submit"]:hover {
     display: block;
 }
 
-/* Only use CSS anchor positioning when NOT using JS fallback */
-@supports (anchor-name: --test) {
-    html:not(.js-positioning) .popover {
-        display: revert;
-    }
-    
-    html:not(.js-positioning) #username-tip {
-        position-anchor: --username-anchor;
-        left: anchor(right);
-        bottom: anchor(bottom);
-        top: auto;
-        right: auto;
-        position-try-fallbacks: --popover-below, --popover-left, --popover-above, --popover-center-below, --popover-center-above;
-    }
-    
-    html:not(.js-positioning) #password-tip {
-        position-anchor: --password-anchor;
-        left: anchor(right);
-        bottom: anchor(bottom);
-        top: auto;
-        right: auto;
-        position-try-fallbacks: --popover-below, --popover-left, --popover-above, --popover-center-below, --popover-center-above;
-    }
+/* CSS Anchor Positioning */
+#username-tip {
+    position-anchor: --username-anchor;
+    left: anchor(right);
+    bottom: anchor(bottom);
+    top: auto;
+    right: auto;
+    position-try-fallbacks: --popover-below, --popover-left, --popover-above, --popover-center-below, --popover-center-above;
 }
+
+#password-tip {
+    position-anchor: --password-anchor;
+    left: anchor(right);
+    bottom: anchor(bottom);
+    top: auto;
+    right: auto;
+    position-try-fallbacks: --popover-below, --popover-left, --popover-above, --popover-center-below, --popover-center-above;
+}
+
 .form-group {
     position: relative;
 }
@@ -186,4 +181,17 @@ button[type="submit"]:hover {
 .forgot-link:hover {
     color: #0056b3;
     text-decoration: underline;
+}
+
+/* Visually hidden but accessible to screen readers */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
 }

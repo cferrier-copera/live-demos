@@ -1,14 +1,14 @@
 /**
- * Popover Demo with CSS Anchor Positioning
+ * Popover Demo with JavaScript Positioning
  * 
- * This demo uses CSS Anchor Positioning API (Chrome 125+) with JavaScript fallback
- * for Safari and other browsers that don't support anchor positioning yet.
+ * Uses JavaScript for positioning to ensure proper viewport handling,
+ * especially with pinch zoom and viewport changes.
  * 
- * The JS fallback implements the same positioning logic:
+ * Positioning logic:
  * - Default: Right side of trigger, bottom-aligned
  * - Fallbacks: below, left, above, center-below, center-above
  * 
- * Also includes Popover API polyfill for Safari and older browsers.
+ * Includes Popover API polyfill for Safari and older browsers.
  */
 
 window.addEventListener('DOMContentLoaded', function() {
@@ -42,101 +42,34 @@ window.addEventListener('DOMContentLoaded', function() {
         })(Element.prototype.matches);
     }
     
-    // Check if CSS Anchor Positioning is supported
-    const supportsAnchorPositioning = false; // Force JS positioning for better viewport handling
-    
-    // Add class to disable CSS anchor positioning
-    document.documentElement.classList.add('js-positioning');
-    
-    // Force screen reader announcement on hover by toggling aria-live
+    // Announce popover content to screen readers using a dedicated live region
     function announceOnHover(popover) {
-        // Only announce if opened by hover (not keyboard focus)
-        const wasLive = popover.getAttribute('aria-live');
-        popover.setAttribute('aria-live', 'assertive');
+        // Find the content span
+        const contentSpan = popover.querySelector('[id$="-content"]');
+        if (!contentSpan) return;
+        
+        // Get the live region
+        const announcer = document.getElementById('hover-announcer');
+        if (!announcer) return;
+        
+        // Clear first to ensure the announcement triggers even if same content
+        announcer.textContent = '';
+        
+        // Announce the content after a brief delay
         setTimeout(function() {
-            if (wasLive) {
-                popover.setAttribute('aria-live', wasLive);
-            }
+            announcer.textContent = contentSpan.textContent;
         }, 100);
+        
+        // Clear the announcer after it's been read
+        setTimeout(function() {
+            announcer.textContent = '';
+        }, 3000);
     }
     
-    // Function to position popover with JavaScript fallback
+    // JavaScript positioning temporarily disabled - using CSS anchor positioning
     function positionPopover(popover, anchor) {
-        if (supportsAnchorPositioning) return; // Let CSS handle it
-        
-        const anchorRect = anchor.getBoundingClientRect();
-        const popoverRect = popover.getBoundingClientRect();
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-        const scrollY = window.scrollY;
-        const scrollX = window.scrollX;
-        
-        // Gap between anchor and popover
-        const gap = 0;
-        
-        // Try positions in order of preference
-        const positions = [
-            // Default: Right side, bottom aligned
-            {
-                left: anchorRect.right + gap,
-                top: anchorRect.bottom - popoverRect.height,
-                name: 'right'
-            },
-            // Fallback 1: Below, left aligned
-            {
-                left: anchorRect.left,
-                top: anchorRect.bottom + gap,
-                name: 'below'
-            },
-            // Fallback 2: Left side, bottom aligned
-            {
-                left: anchorRect.left - popoverRect.width - gap,
-                top: anchorRect.bottom - popoverRect.height,
-                name: 'left'
-            },
-            // Fallback 3: Above, left aligned
-            {
-                left: anchorRect.left,
-                top: anchorRect.top - popoverRect.height - gap,
-                name: 'above'
-            },
-            // Fallback 4: Center below
-            {
-                left: anchorRect.left + (anchorRect.width / 2) - (popoverRect.width / 2),
-                top: anchorRect.bottom + gap,
-                name: 'center-below'
-            },
-            // Fallback 5: Center above
-            {
-                left: anchorRect.left + (anchorRect.width / 2) - (popoverRect.width / 2),
-                top: anchorRect.top - popoverRect.height - gap,
-                name: 'center-above'
-            }
-        ];
-        
-        // Find the first position that fits in viewport
-        const margin = 8;
-        let chosenPosition = positions[0];
-        for (let pos of positions) {
-            const fitsHorizontally = pos.left >= margin && (pos.left + popoverRect.width) <= (viewportWidth - margin);
-            const fitsVertically = pos.top >= margin && (pos.top + popoverRect.height) <= (viewportHeight - margin);
-            
-            if (fitsHorizontally && fitsVertically) {
-                chosenPosition = pos;
-                break;
-            }
-        }
-        
-        // Constrain to viewport bounds
-        let finalLeft = Math.max(margin, Math.min(chosenPosition.left, viewportWidth - popoverRect.width - margin));
-        let finalTop = Math.max(margin, Math.min(chosenPosition.top, viewportHeight - popoverRect.height - margin));
-        
-        // Apply position (convert to fixed positioning relative to viewport)
-        popover.style.position = 'fixed';
-        popover.style.left = finalLeft + 'px';
-        popover.style.top = finalTop + 'px';
-        popover.style.right = 'auto';
-        popover.style.bottom = 'auto';
+        // CSS anchor positioning handles this
+        return;
     }
 
     document.querySelectorAll('.tooltip-icon').forEach(function(icon) {
@@ -150,22 +83,31 @@ window.addEventListener('DOMContentLoaded', function() {
         // Show popover on hover
         icon.addEventListener('mouseenter', function() {
             openedByHover = true;
+            icon.setAttribute('aria-expanded', 'true');
             popover.showPopover();
-            announceOnHover(popover);
-            // Use setTimeout to ensure popover is rendered before positioning
+            // Use setTimeout to ensure popover is rendered before announcing
             setTimeout(function() {
-                positionPopover(popover, icon);
-            }, 0);
+                announceOnHover(popover);
+            }, 50);
         });
 
-        // Listen for popover toggle events to position it and track state
+        // Click handler to keep popover open if it was opened by hover
+        icon.addEventListener('click', function(e) {
+            // If popover is already open (from hover), keep it open by clearing the hover flag
+            if (openedByHover && popover.matches(':popover-open, [data-popover-open]')) {
+                openedByHover = false;
+                e.preventDefault(); // Prevent toggling
+                popover.showPopover(); // Ensure it stays open
+            }
+            // Otherwise, let the native popovertarget behavior handle it
+        });
+
+        // Listen for popover toggle events to track state
         popover.addEventListener('toggle', function(e) {
             if (e.newState === 'open') {
-                // Position the popover when it opens (from any source: click, keyboard, etc.)
-                setTimeout(function() {
-                    positionPopover(popover, icon);
-                }, 0);
+                icon.setAttribute('aria-expanded', 'true');
             } else if (e.newState === 'closed') {
+                icon.setAttribute('aria-expanded', 'false');
                 // Reset hover flag when popover closes
                 openedByHover = false;
             }
@@ -174,6 +116,7 @@ window.addEventListener('DOMContentLoaded', function() {
         // Hide popover on mouse out from icon only if opened by hover
         icon.addEventListener('mouseleave', function(e) {
             if (openedByHover && e.relatedTarget !== popover && !popover.contains(e.relatedTarget)) {
+                icon.setAttribute('aria-expanded', 'false');
                 popover.hidePopover();
             }
         });
@@ -182,16 +125,13 @@ window.addEventListener('DOMContentLoaded', function() {
         popover.addEventListener('mouseenter', function() {
             if (openedByHover) {
                 popover.showPopover();
-                // Reposition in case it moved
-                setTimeout(function() {
-                    positionPopover(popover, icon);
-                }, 0);
             }
         });
 
         // Hide popover when mouse leaves the popover only if opened by hover
         popover.addEventListener('mouseleave', function() {
             if (openedByHover) {
+                icon.setAttribute('aria-expanded', 'false');
                 popover.hidePopover();
             }
         });
@@ -222,25 +162,7 @@ window.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // For browsers without anchor positioning, update position on scroll/resize
-    if (!supportsAnchorPositioning) {
-        let repositionTimer;
-        function handleRepositioning() {
-            clearTimeout(repositionTimer);
-            repositionTimer = setTimeout(function() {
-                document.querySelectorAll('[popover]:popover-open, [popover][data-popover-open]').forEach(function(popover) {
-                    const anchorId = popover.id.replace('-tip', '-anchor');
-                    const anchor = document.getElementById(anchorId);
-                    if (anchor) {
-                        positionPopover(popover, anchor);
-                    }
-                });
-            }, 16); // ~60fps
-        }
-        
-        window.addEventListener('scroll', handleRepositioning, { passive: true });
-        window.addEventListener('resize', handleRepositioning);
-    }
+    // Scroll/resize handlers disabled - CSS anchor positioning handles this automatically
 
     // For browsers without native popover, handle clicking outside to close
     if (!supportsPopover) {
