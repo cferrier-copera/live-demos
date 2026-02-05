@@ -6,7 +6,7 @@
  */
 
 window.addEventListener('DOMContentLoaded', function() {
-    console.log('Popover Demo v2.5 - CSS Anchor Positioning (below is last fallback)');
+    console.log('Popover Demo v2.6 - Question marks hidden from screen readers');
     
     // Announce popover content to screen readers using a dedicated live region
     function announceOnHover(popover) {
