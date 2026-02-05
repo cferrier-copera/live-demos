@@ -137,14 +137,14 @@ button[type="submit"]:hover {
     position-anchor: --username-anchor;
     left: anchor(right);
     bottom: anchor(bottom);
-    position-try-fallbacks: --popover-below, --popover-left, --popover-above, --popover-center-below, --popover-center-above;
+    position-try-fallbacks: --popover-left, --popover-above, --popover-center-below, --popover-center-above, --popover-below;
 }
 
 #password-tip {
     position-anchor: --password-anchor;
     left: anchor(right);
     bottom: anchor(bottom);
-    position-try-fallbacks: --popover-below, --popover-left, --popover-above, --popover-center-below, --popover-center-above;
+    position-try-fallbacks: --popover-left, --popover-above, --popover-center-below, --popover-center-above, --popover-below;
 }
 
 .form-group {
