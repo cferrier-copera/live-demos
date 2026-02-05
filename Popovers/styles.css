@@ -125,27 +125,29 @@ button[type="submit"]:hover {
     display: block;
 }
 
-/* For browsers with native popover support */
+/* Only use CSS anchor positioning when NOT using JS fallback */
 @supports (anchor-name: --test) {
-    .popover {
+    html:not(.js-positioning) .popover {
         display: revert;
     }
-}
-#username-tip {
-    position-anchor: --username-anchor;
-    left: anchor(right);
-    bottom: anchor(bottom);
-    top: auto;
-    right: auto;
-    position-try-fallbacks: --popover-below, --popover-left, --popover-above, --popover-center-below, --popover-center-above;
-}
-#password-tip {
-    position-anchor: --password-anchor;
-    left: anchor(right);
-    bottom: anchor(bottom);
-    top: auto;
-    right: auto;
-    position-try-fallbacks: --popover-below, --popover-left, --popover-above, --popover-center-below, --popover-center-above;
+    
+    html:not(.js-positioning) #username-tip {
+        position-anchor: --username-anchor;
+        left: anchor(right);
+        bottom: anchor(bottom);
+        top: auto;
+        right: auto;
+        position-try-fallbacks: --popover-below, --popover-left, --popover-above, --popover-center-below, --popover-center-above;
+    }
+    
+    html:not(.js-positioning) #password-tip {
+        position-anchor: --password-anchor;
+        left: anchor(right);
+        bottom: anchor(bottom);
+        top: auto;
+        right: auto;
+        position-try-fallbacks: --popover-below, --popover-left, --popover-above, --popover-center-below, --popover-center-above;
+    }
 }
 .form-group {
     position: relative;

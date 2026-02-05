@@ -20,6 +20,10 @@ window.addEventListener('DOMContentLoaded', function() {
         HTMLElement.prototype.showPopover = function() {
             this.style.display = 'block';
             this.setAttribute('data-popover-open', '');
+            // Ensure aria-live is set for screen readers
+            if (!this.hasAttribute('aria-live')) {
+                this.setAttribute('aria-live', 'polite');
+            }
         };
         
         HTMLElement.prototype.hidePopover = function() {
@@ -39,7 +43,19 @@ window.addEventListener('DOMContentLoaded', function() {
     }
     
     // Check if CSS Anchor Positioning is supported
-    const supportsAnchorPositioning = CSS.supports('anchor-name', '--test');
+    const supportsAnchorPositioning = false; // Force JS positioning for better viewport handling
+    
+    // Add class to disable CSS anchor positioning
+    document.documentElement.classList.add('js-positioning');
+    
+    // Function to ensure screen reader announces popover content
+    function announcePopover(popover) {
+        // Temporarily toggle aria-live to force announcement
+        popover.setAttribute('aria-live', 'off');
+        setTimeout(function() {
+            popover.setAttribute('aria-live', 'polite');
+        }, 10);
+    }
     
     // Function to position popover with JavaScript fallback
     function positionPopover(popover, anchor) {
@@ -96,10 +112,11 @@ window.addEventListener('DOMContentLoaded', function() {
         ];
         
         // Find the first position that fits in viewport
+        const margin = 8;
         let chosenPosition = positions[0];
         for (let pos of positions) {
-            const fitsHorizontally = pos.left >= 0 && (pos.left + popoverRect.width) <= viewportWidth;
-            const fitsVertically = pos.top >= 0 && (pos.top + popoverRect.height) <= viewportHeight;
+            const fitsHorizontally = pos.left >= margin && (pos.left + popoverRect.width) <= (viewportWidth - margin);
+            const fitsVertically = pos.top >= margin && (pos.top + popoverRect.height) <= (viewportHeight - margin);
             
             if (fitsHorizontally && fitsVertically) {
                 chosenPosition = pos;
@@ -107,10 +124,14 @@ window.addEventListener('DOMContentLoaded', function() {
             }
         }
         
+        // Constrain to viewport bounds
+        let finalLeft = Math.max(margin, Math.min(chosenPosition.left, viewportWidth - popoverRect.width - margin));
+        let finalTop = Math.max(margin, Math.min(chosenPosition.top, viewportHeight - popoverRect.height - margin));
+        
         // Apply position (convert to fixed positioning relative to viewport)
         popover.style.position = 'fixed';
-        popover.style.left = chosenPosition.left + 'px';
-        popover.style.top = chosenPosition.top + 'px';
+        popover.style.left = finalLeft + 'px';
+        popover.style.top = finalTop + 'px';
         popover.style.right = 'auto';
         popover.style.bottom = 'auto';
     }
@@ -127,6 +148,7 @@ window.addEventListener('DOMContentLoaded', function() {
         icon.addEventListener('mouseenter', function() {
             openedByHover = true;
             popover.showPopover();
+            announcePopover(popover);
             // Use setTimeout to ensure popover is rendered before positioning
             setTimeout(function() {
                 positionPopover(popover, icon);
@@ -141,6 +163,7 @@ window.addEventListener('DOMContentLoaded', function() {
                 popover.hidePopover();
             } else {
                 popover.showPopover();
+                announcePopover(popover);
                 // Use setTimeout to ensure popover is rendered before positioning
                 setTimeout(function() {
                     positionPopover(popover, icon);
