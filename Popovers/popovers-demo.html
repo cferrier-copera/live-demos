@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Login Page with Popover Tooltips</title>
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<div class="login-container">
+		<h2>Login</h2>
+		<form>
+			<div class="form-group">
+				<label for="username">Username</label>
+				<button type="button" class="tooltip-icon" id="username-anchor" popovertarget="username-tip" aria-label="Username info">?</button>
+				<div id="username-tip" class="popover" tabindex="-1" style="display:none;">
+					<button type="button" class="popover-close" aria-label="Close username tooltip">×</button>
+					Enter your unique username. It is case-sensitive.
+				</div>
+				<input type="text" id="username" name="username" autocomplete="username">
+				<a href="#" class="forgot-link" id="forgot-username">Forgot username?</a>
+			</div>
+			<div class="form-group">
+				<label for="password">Password</label>
+				<button type="button" class="tooltip-icon" id="password-anchor" popovertarget="password-tip" aria-label="Password info">?</button>
+				<div id="password-tip" class="popover" tabindex="-1" style="display:none;">
+					<button type="button" class="popover-close" aria-label="Close password tooltip">×</button>
+					Your password must be at least 8 characters long and contain a number.
+				</div>
+				<input type="password" id="password" name="password" autocomplete="current-password">
+				<a href="#" class="forgot-link" id="forgot-password">Forgot password?</a>
+			</div>
+			<button type="submit">Login</button>
+		</form>
+	</div>
+	<script src="popovers-demo.js"></script>
+</body>
+</html>
