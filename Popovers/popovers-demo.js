@@ -1,55 +1,83 @@
 
 
 window.addEventListener('DOMContentLoaded', function() {
-    // Show/hide popover on trigger click
     document.querySelectorAll('.tooltip-icon').forEach(function(icon) {
         const targetId = icon.getAttribute('popovertarget');
         const popover = document.getElementById(targetId);
         if (!popover) return;
+
+        // Track how the popover was opened
+        let openedByHover = false;
+
+        // Show popover on hover
+        icon.addEventListener('mouseenter', function() {
+            openedByHover = true;
+            popover.showPopover();
+        });
+
+        // Show popover on click (toggle behavior)
         icon.addEventListener('click', function(e) {
             e.preventDefault();
-            // Hide all popovers first
-            document.querySelectorAll('.popover').forEach(function(pop) {
-                pop.style.display = 'none';
-            });
-            // Toggle this popover
-            if (popover.style.display === 'none' || !popover.style.display) {
-                // Use Anchor Positioning API if available
-                if (popover.style.anchorName !== undefined && icon.id) {
-                    popover.style.position = 'anchor';
-                    popover.style.anchorName = icon.id;
-                    // Position to the right and above the anchor
-                    popover.style.inset = 'anchor(left) anchor(top)';
-                    popover.style.display = 'block';
-                } else {
-                    // Fallback to manual positioning: right and above
-                    const rect = icon.getBoundingClientRect();
-                    popover.style.left = (rect.right + 8) + 'px';
-                    popover.style.top = (rect.top + window.scrollY - popover.offsetHeight - 8) + 'px';
-                    popover.style.display = 'block';
-                }
+            openedByHover = false;
+            if (popover.matches(':popover-open')) {
+                popover.hidePopover();
             } else {
-                popover.style.display = 'none';
+                popover.showPopover();
             }
         });
+
+        // Hide popover on mouse out from icon only if opened by hover
+        icon.addEventListener('mouseleave', function(e) {
+            if (openedByHover && e.relatedTarget !== popover && !popover.contains(e.relatedTarget)) {
+                popover.hidePopover();
+            }
+        });
+
+        // Keep popover open when hovering over it
+        popover.addEventListener('mouseenter', function() {
+            if (openedByHover) {
+                popover.showPopover();
+            }
+        });
+
+        // Hide popover when mouse leaves the popover only if opened by hover
+        popover.addEventListener('mouseleave', function() {
+            if (openedByHover) {
+                popover.hidePopover();
+            }
+        });
+
+        // Reset flag when popover closes
+        popover.addEventListener('toggle', function(e) {
+            if (e.newState === 'closed') {
+                openedByHover = false;
+            }
+        });
+
+        // Close popover when focus leaves both trigger and popover
+        function handleFocusOut(e) {
+            setTimeout(function() {
+                const activeElement = document.activeElement;
+                const focusInIcon = icon === activeElement;
+                const focusInPopover = popover.contains(activeElement);
+                
+                if (!focusInIcon && !focusInPopover) {
+                    popover.hidePopover();
+                }
+            }, 0);
+        }
+
+        icon.addEventListener('blur', handleFocusOut);
+        popover.addEventListener('focusout', handleFocusOut);
     });
 
     // Hide popover when clicking close button
     document.querySelectorAll('.popover-close').forEach(function(btn) {
         btn.addEventListener('click', function(e) {
-            const popover = btn.closest('.popover');
-            if (popover) popover.style.display = 'none';
+            const popover = btn.closest('[popover]');
+            if (popover) popover.hidePopover();
             e.stopPropagation();
         });
-    });
-
-    // Hide popover when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!e.target.classList.contains('tooltip-icon') && !e.target.classList.contains('popover-close')) {
-            document.querySelectorAll('.popover').forEach(function(pop) {
-                pop.style.display = 'none';
-            });
-        }
     });
 });
 
