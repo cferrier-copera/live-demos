@@ -6,7 +6,7 @@
  */
 
 window.addEventListener('DOMContentLoaded', function() {
-    console.log('Popover Demo v2.8 - All below positions as last fallbacks');
+    console.log('Popover Demo v2.9 - Reverted fallback order');
     
     // ========================================
     // UTILITY FUNCTIONS
