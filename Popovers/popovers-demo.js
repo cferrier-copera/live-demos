@@ -145,18 +145,16 @@ window.addEventListener('DOMContentLoaded', function() {
             }, 0);
         });
 
-        // Show popover on click (toggle behavior)
-        icon.addEventListener('click', function(e) {
-            e.preventDefault();
-            openedByHover = false;
-            if (popover.matches(':popover-open')) {
-                popover.hidePopover();
-            } else {
-                popover.showPopover();
-                // Use setTimeout to ensure popover is rendered before positioning
+        // Listen for popover toggle events to position it and track state
+        popover.addEventListener('toggle', function(e) {
+            if (e.newState === 'open') {
+                // Position the popover when it opens (from any source: click, keyboard, etc.)
                 setTimeout(function() {
                     positionPopover(popover, icon);
                 }, 0);
+            } else if (e.newState === 'closed') {
+                // Reset hover flag when popover closes
+                openedByHover = false;
             }
         });
 
@@ -182,13 +180,6 @@ window.addEventListener('DOMContentLoaded', function() {
         popover.addEventListener('mouseleave', function() {
             if (openedByHover) {
                 popover.hidePopover();
-            }
-        });
-
-        // Reset flag when popover closes
-        popover.addEventListener('toggle', function(e) {
-            if (e.newState === 'closed') {
-                openedByHover = false;
             }
         });
 
