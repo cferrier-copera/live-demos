@@ -50,17 +50,20 @@ window.addEventListener('DOMContentLoaded', function() {
     
     // Function to ensure screen reader announces popover content
     function announcePopover(popover) {
-        // Method 1: Force re-announcement by clearing and re-adding content
-        const textContent = popover.textContent.trim();
+        // Get the text content span (excluding the close button)
+        const contentSpan = popover.querySelector('span[id$="-content"]');
+        if (!contentSpan) return; // Exit if no content span found
+        
+        const textContent = contentSpan.textContent.trim();
         const closeBtn = popover.querySelector('.popover-close');
         
-        // Store close button
+        // Store close button HTML
         const closeBtnHTML = closeBtn ? closeBtn.outerHTML : '';
         
         // Clear and restore content to trigger announcement
         popover.innerHTML = '';
         setTimeout(function() {
-            popover.innerHTML = closeBtnHTML + textContent;
+            popover.innerHTML = closeBtnHTML + '<span id="' + contentSpan.id + '">' + textContent + '</span>';
             // Restore the close button event listener
             const newCloseBtn = popover.querySelector('.popover-close');
             if (newCloseBtn) {
