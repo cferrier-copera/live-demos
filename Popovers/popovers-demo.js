@@ -6,7 +6,7 @@
  */
 
 window.addEventListener('DOMContentLoaded', function() {
-    console.log('Popover Demo v2.7 - Reorganized hover code with comments');
+    console.log('Popover Demo v2.8 - All below positions as last fallbacks');
     
     // ========================================
     // UTILITY FUNCTIONS
