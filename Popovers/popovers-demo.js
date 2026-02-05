@@ -6,9 +6,16 @@
  */
 
 window.addEventListener('DOMContentLoaded', function() {
-    console.log('Popover Demo v2.6 - Question marks hidden from screen readers');
+    console.log('Popover Demo v2.7 - Reorganized hover code with comments');
     
-    // Announce popover content to screen readers using a dedicated live region
+    // ========================================
+    // UTILITY FUNCTIONS
+    // ========================================
+    
+    /**
+     * Announce popover content to screen readers using a dedicated live region
+     * This is called when a popover opens via hover
+     */
     function announceOnHover(popover) {
         // Find the content span
         const contentSpan = popover.querySelector('[id$="-content"]');
@@ -32,15 +39,29 @@ window.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
 
+    // ========================================
+    // POPOVER SETUP
+    // ========================================
+    
     document.querySelectorAll('.tooltip-icon').forEach(function(icon) {
         const targetId = icon.getAttribute('popovertarget');
         const popover = document.getElementById(targetId);
         if (!popover) return;
 
-        // Track how the popover was opened
+        // Track whether the popover was opened by hovering (vs clicking)
         let openedByHover = false;
 
-        // Show popover on hover
+        // ========================================
+        // HOVER BEHAVIOR
+        // ========================================
+        
+        /**
+         * When user hovers over the trigger icon:
+         * - Mark as opened by hover
+         * - Set aria-expanded for accessibility
+         * - Show the popover
+         * - Announce content to screen readers
+         */
         icon.addEventListener('mouseenter', function() {
             openedByHover = true;
             icon.setAttribute('aria-expanded', 'true');
@@ -51,7 +72,48 @@ window.addEventListener('DOMContentLoaded', function() {
             }, 50);
         });
 
-        // Click handler to keep popover open if it was opened by hover
+        /**
+         * When mouse leaves the trigger icon:
+         * - Only hide if it was opened by hover (not click)
+         * - Don't hide if mouse moved to the popover itself
+         */
+        icon.addEventListener('mouseleave', function(e) {
+            if (openedByHover && e.relatedTarget !== popover && !popover.contains(e.relatedTarget)) {
+                icon.setAttribute('aria-expanded', 'false');
+                popover.hidePopover();
+            }
+        });
+
+        /**
+         * When user hovers over the popover itself:
+         * - Keep it open if it was opened by hover
+         */
+        popover.addEventListener('mouseenter', function() {
+            if (openedByHover) {
+                popover.showPopover();
+            }
+        });
+
+        /**
+         * When mouse leaves the popover:
+         * - Hide it if it was opened by hover (not click)
+         */
+        popover.addEventListener('mouseleave', function() {
+            if (openedByHover) {
+                icon.setAttribute('aria-expanded', 'false');
+                popover.hidePopover();
+            }
+        });
+
+        // ========================================
+        // CLICK BEHAVIOR
+        // ========================================
+        
+        /**
+         * When user clicks the trigger icon:
+         * - If popover is already open from hover, convert to "sticky" (click-opened)
+         * - Otherwise, let native popovertarget behavior handle it
+         */
         icon.addEventListener('click', function(e) {
             // If popover is already open (from hover), keep it open by clearing the hover flag
             if (openedByHover && popover.matches(':popover-open')) {
@@ -62,7 +124,14 @@ window.addEventListener('DOMContentLoaded', function() {
             // Otherwise, let the native popovertarget behavior handle it
         });
 
-        // Listen for popover toggle events to track state
+        // ========================================
+        // STATE MANAGEMENT
+        // ========================================
+        
+        /**
+         * Listen for popover toggle events to maintain aria-expanded state
+         * and reset hover flag when popover closes
+         */
         popover.addEventListener('toggle', function(e) {
             if (e.newState === 'open') {
                 icon.setAttribute('aria-expanded', 'true');
@@ -73,30 +142,14 @@ window.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Hide popover on mouse out from icon only if opened by hover
-        icon.addEventListener('mouseleave', function(e) {
-            if (openedByHover && e.relatedTarget !== popover && !popover.contains(e.relatedTarget)) {
-                icon.setAttribute('aria-expanded', 'false');
-                popover.hidePopover();
-            }
-        });
-
-        // Keep popover open when hovering over it
-        popover.addEventListener('mouseenter', function() {
-            if (openedByHover) {
-                popover.showPopover();
-            }
-        });
-
-        // Hide popover when mouse leaves the popover only if opened by hover
-        popover.addEventListener('mouseleave', function() {
-            if (openedByHover) {
-                icon.setAttribute('aria-expanded', 'false');
-                popover.hidePopover();
-            }
-        });
-
-        // Close popover when focus leaves both trigger and popover
+        // ========================================
+        // KEYBOARD/FOCUS BEHAVIOR
+        // ========================================
+        
+        /**
+         * Close popover when focus leaves both the trigger and the popover
+         * This handles keyboard navigation and accessibility
+         */
         function handleFocusOut(e) {
             setTimeout(function() {
                 const activeElement = document.activeElement;
@@ -113,7 +166,13 @@ window.addEventListener('DOMContentLoaded', function() {
         popover.addEventListener('focusout', handleFocusOut);
     });
 
-    // Hide popover when clicking close button
+    // ========================================
+    // CLOSE BUTTON HANDLER
+    // ========================================
+    
+    /**
+     * Handle clicks on the X close button within popovers
+     */
     document.querySelectorAll('.popover-close').forEach(function(btn) {
         btn.addEventListener('click', function(e) {
             const popover = btn.closest('[popover]');
@@ -121,8 +180,6 @@ window.addEventListener('DOMContentLoaded', function() {
             e.stopPropagation();
         });
     });
-
-    // Scroll/resize handlers disabled - CSS anchor positioning handles this automatically
 });
 
 
