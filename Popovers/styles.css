@@ -117,6 +117,19 @@ button[type="submit"]:hover {
     z-index: 10;
     pointer-events: auto;
     box-shadow: 0 0.125rem 0.5rem rgba(0,0,0,0.12);
+    display: none; /* Hidden by default for browsers without native popover support */
+}
+
+/* Show popover when using polyfill */
+.popover[data-popover-open] {
+    display: block;
+}
+
+/* For browsers with native popover support */
+@supports (anchor-name: --test) {
+    .popover {
+        display: revert;
+    }
 }
 #username-tip {
     position-anchor: --username-anchor;

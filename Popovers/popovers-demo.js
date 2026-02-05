@@ -7,9 +7,37 @@
  * The JS fallback implements the same positioning logic:
  * - Default: Right side of trigger, bottom-aligned
  * - Fallbacks: below, left, above, center-below, center-above
+ * 
+ * Also includes Popover API polyfill for Safari and older browsers.
  */
 
 window.addEventListener('DOMContentLoaded', function() {
+    // Check if browser supports Popover API
+    const supportsPopover = typeof HTMLElement.prototype.showPopover === 'function';
+    
+    // Polyfill for Popover API
+    if (!supportsPopover) {
+        HTMLElement.prototype.showPopover = function() {
+            this.style.display = 'block';
+            this.setAttribute('data-popover-open', '');
+        };
+        
+        HTMLElement.prototype.hidePopover = function() {
+            this.style.display = 'none';
+            this.removeAttribute('data-popover-open');
+        };
+        
+        // Add helper to check if popover is open
+        Element.prototype.matches = (function(matches) {
+            return function(selector) {
+                if (selector === ':popover-open') {
+                    return this.hasAttribute('data-popover-open');
+                }
+                return matches.call(this, selector);
+            };
+        })(Element.prototype.matches);
+    }
+    
     // Check if CSS Anchor Positioning is supported
     const supportsAnchorPositioning = CSS.supports('anchor-name', '--test');
     
@@ -184,7 +212,7 @@ window.addEventListener('DOMContentLoaded', function() {
         function handleRepositioning() {
             clearTimeout(repositionTimer);
             repositionTimer = setTimeout(function() {
-                document.querySelectorAll('[popover]:popover-open').forEach(function(popover) {
+                document.querySelectorAll('[popover]:popover-open, [popover][data-popover-open]').forEach(function(popover) {
                     const anchorId = popover.id.replace('-tip', '-anchor');
                     const anchor = document.getElementById(anchorId);
                     if (anchor) {
@@ -196,6 +224,29 @@ window.addEventListener('DOMContentLoaded', function() {
         
         window.addEventListener('scroll', handleRepositioning, { passive: true });
         window.addEventListener('resize', handleRepositioning);
+    }
+
+    // For browsers without native popover, handle clicking outside to close
+    if (!supportsPopover) {
+        document.addEventListener('click', function(e) {
+            const clickedPopover = e.target.closest('[popover]');
+            const clickedTrigger = e.target.closest('.tooltip-icon');
+            
+            if (!clickedPopover && !clickedTrigger) {
+                document.querySelectorAll('[popover][data-popover-open]').forEach(function(popover) {
+                    popover.hidePopover();
+                });
+            }
+        });
+        
+        // Handle Escape key to close popovers
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('[popover][data-popover-open]').forEach(function(popover) {
+                    popover.hidePopover();
+                });
+            }
+        });
     }
 });
 
