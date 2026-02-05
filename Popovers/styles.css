@@ -117,7 +117,11 @@ button[type="submit"]:hover {
     z-index: 10;
     pointer-events: auto;
     box-shadow: 0 0.125rem 0.5rem rgba(0,0,0,0.12);
-    display: none; /* Hidden by default for browsers without native popover support */
+}
+
+/* Show popover when open (native popover API) */
+.popover:popover-open {
+    display: block;
 }
 
 /* Show popover when using polyfill */
