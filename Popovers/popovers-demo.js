@@ -6,7 +6,7 @@
  */
 
 window.addEventListener('DOMContentLoaded', function() {
-    console.log('Popover Demo v3.1 - Gooey filter on body, no gap');
+    console.log('Popover Demo v3.2');
     
     // ========================================
     // UTILITY FUNCTIONS

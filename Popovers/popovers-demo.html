@@ -8,40 +8,35 @@
 	<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-	<!-- SVG Filter for gooey effect -->
-	<svg style="position: absolute; width: 0; height: 0;" aria-hidden="true">
-		<defs>
-			<filter id="gooey">
-				<feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
-				<feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="gooey" />
-				<feComposite in="SourceGraphic" in2="gooey" operator="atop"/>
-			</filter>
-		</defs>
-	</svg>
 	<!-- Visually hidden live region for screen reader announcements on hover -->
 	<div id="hover-announcer" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
+	<h1>Popover Demo</h1>
 	<div class="login-container">
 		<h2>Login</h2>
 		<form>
 			<div class="form-group">
-				<label for="username">Username</label>
-				<div class="gooey-container">
+				<div>
+					<label for="username">Username</label>
 					<button type="button" class="tooltip-icon" id="username-anchor" popovertarget="username-tip" aria-label="Username info" aria-describedby="username-tip-content" aria-expanded="false"><span aria-hidden="true">?</span></button>
-					<div id="username-tip" popover class="popover" role="status" aria-live="polite">
-						<button type="button" class="popover-close" aria-label="Close username tooltip">×</button>
-						<span id="username-tip-content">Enter your unique username. It is case-sensitive.</span>
+					<div id="username-tip" popover class="popover">
+						<div class="popover-content">
+							<button type="button" class="popover-close" aria-label="Close username tooltip">×</button>
+							<span id="username-tip-content">Please use your User ID to log on. If you have not set up a PERA user profile, click "Register as a new user." If you have forgotten your User ID, click "Forgot User ID?"</span>
+						</div>
 					</div>
 				</div>
 				<input type="text" id="username" name="username" autocomplete="username">
 				<a href="#" class="forgot-link" id="forgot-username">Forgot username?</a>
 			</div>
 			<div class="form-group">
-				<label for="password">Password</label>
-				<div class="gooey-container">
+				<div>
+					<label for="password">Password</label>
 					<button type="button" class="tooltip-icon" id="password-anchor" popovertarget="password-tip" aria-label="Password info" aria-describedby="password-tip-content" aria-expanded="false"><span aria-hidden="true">?</span></button>
-					<div id="password-tip" popover class="popover" role="status" aria-live="polite">
-						<button type="button" class="popover-close" aria-label="Close password tooltip">×</button>
-						<span id="password-tip-content">Your password must be at least 8 characters long and contain a number.</span>
+					<div id="password-tip" popover class="popover">
+						<div class="popover-content">
+							<button type="button" class="popover-close" aria-label="Close password tooltip">×</button>
+							<span id="password-tip-content">Please use your password to log on. If you have forgotten your password, click "Forgot Password?"</span>
+						</div>
 					</div>
 				</div>
 				<input type="password" id="password" name="password" autocomplete="current-password">
@@ -49,6 +44,26 @@
 			</div>
 			<button type="submit">Login</button>
 		</form>
+	</div>
+	<div class="login-container">
+		<details>
+			<summary>Accessibility Features</summary>
+			<div class="details-container">
+				<ul>
+					<li>Reads popover on trigger focus</li>
+					<li>Hidden live region for screen reader announcements on hover (aria-live="assertive")</li>
+					<li>aria-label on trigger buttons for context</li>
+					<li>aria-describedby linking trigger to popover content</li>
+					<li>aria-expanded state management (reflects open/closed state)</li>
+					<li>aria-label on close button for clear dismissal action</li>
+					<li>aria-hidden on decorative "?" icon</li>
+					<li>Keyboard navigation support (Tab, Escape)</li>
+					<li>Close button for manual dismissal</li>
+					<li>Hover behavior with automatic announcements</li>
+					<li>Focus management (closes when focus leaves trigger and popover)</li>
+				</ul>
+			</div>
+		</details>
 	</div>
 	<script src="popovers-demo.js?v=1.8"></script>
 </body>

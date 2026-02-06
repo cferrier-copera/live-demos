@@ -10,7 +10,6 @@ body {
     margin: 0;
     box-sizing: border-box;
     min-height: 100vh;
-    filter: url(#gooey);
 }
 
 .login-container {
@@ -18,7 +17,7 @@ body {
     padding: 2rem 2.5rem;
     border-radius: 0.5rem;
     box-shadow: 0 0.125rem 0.5rem rgba(0,0,0,0.1);
-    min-width: 20rem;
+    min-width: 15rem;
     margin: 0 auto;
     max-width: 26.25rem;
 }
@@ -27,9 +26,6 @@ body {
     position: relative;
 }
 
-.gooey-container {
-    display: inline;
-}
 label {
     display: inline;
     margin-bottom: 0.5rem;
@@ -38,8 +34,8 @@ label {
     background: #007bff;
     color: #fff;
     border-radius: 50%;
-    width: 1.2rem;
-    height: 1.2rem;
+    width: 1.5rem;
+    height: 1.5rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -47,6 +43,7 @@ label {
     cursor: pointer;
     margin-left: 0.5rem;
     border: none;
+    position: relative;
 }
 #username-anchor {
     anchor-name: --username-anchor;
@@ -55,7 +52,6 @@ label {
     anchor-name: --password-anchor;
 }
 input[type="text"], input[type="password"] {
-    width: 100%;
     padding: 0.5rem;
     border: 0.0625rem solid #ccc;
     border-radius: 0.25rem;
@@ -75,38 +71,38 @@ button[type="submit"]:hover {
 }
 
 @position-try --popover-left {
-    right: anchor(left);
-    bottom: anchor(bottom);
+    right: calc(anchor(left) + 0.25rem);
+    bottom: calc(anchor(bottom) - 0.25rem);
     top: auto;
     left: auto;
     margin-right: 0;
 }
 
-@position-try --popover-below {
-    left: anchor(left);
-    top: anchor(bottom);
-    bottom: auto;
-    right: auto;
-}
-
 @position-try --popover-above {
-    left: anchor(left);
-    bottom: anchor(top);
+    left: calc(anchor(left) - 0.25rem);
+    bottom: calc(anchor(top) - 0.25rem);
     top: auto;
     right: auto;
 }
 
 @position-try --popover-center-above {
     left: anchor(center);
-    bottom: anchor(top);
+    bottom: calc(anchor(top) + 0.25rem);
     top: auto;
     right: auto;
     margin-left: -6.875rem;
 }
 
+@position-try --popover-below {
+    left: anchor(left);
+    top: calc(anchor(bottom) + 0.25rem);
+    bottom: auto;
+    right: auto;
+}
+
 @position-try --popover-center-below {
     left: anchor(center);
-    top: anchor(bottom);
+    top: calc(anchor(bottom) - 0.25rem);
     bottom: auto;
     right: auto;
     margin-left: -6.875rem;
@@ -114,10 +110,7 @@ button[type="submit"]:hover {
 
 .popover {
     position: fixed;
-    padding: 1.5rem 1.2rem 1.2rem 1.2rem;
-    background: #222;
-    color: #fff;
-    border-radius: 0.375rem;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
     font-size: 0.95rem;
     min-width: 10rem;
     max-width: 13.75rem;
@@ -126,11 +119,26 @@ button[type="submit"]:hover {
     box-shadow: none;
     position-visibility: anchors-visible;
     inset: auto;
+    border: none;
+    overflow: visible;
+    background-color: transparent;
+    left: calc(anchor(right) - 0.25rem);
+    bottom: calc(anchor(bottom) - 0.25rem);
+    position-try-fallbacks: --popover-left, --popover-above, --popover-center-above, --popover-below, --popover-center-below
+}
+
+.popover-content {
+    background: #007bff;
+    color: #fff;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    position: relative;
 }
 
 /* Show popover when open (native popover API) */
 .popover:popover-open {
     display: block;
+    border: none;
 }
 
 /* Show popover when using polyfill */
@@ -141,36 +149,33 @@ button[type="submit"]:hover {
 /* CSS Anchor Positioning */
 #username-tip {
     position-anchor: --username-anchor;
-    left: anchor(right);
-    bottom: anchor(bottom);
-    margin-left: 0;
-    position-try-fallbacks: --popover-left, --popover-above, --popover-center-below, --popover-center-above, --popover-below;
 }
 
 #password-tip {
     position-anchor: --password-anchor;
-    left: anchor(right);
-    bottom: anchor(bottom);
-    margin-left: 0;
-    position-try-fallbacks: --popover-left, --popover-above, --popover-center-below, --popover-center-above, --popover-below;
 }
 
 .form-group {
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
-
 
 .popover-close {
     position: absolute;
-    top: 0.5rem;
-    right: 0.625rem;
+    top: 0;
+    right: 0;
+    height: 1.5rem;
+    width: 1.5rem;
     background: transparent;
     border: none;
     color: #fff;
     font-size: 1.1rem;
     cursor: pointer;
     padding: 0;
-    line-height: 1;
+    line-height: 0;
+    border-radius: 10rem;
+
 }
 
 .forgot-link {
@@ -184,6 +189,7 @@ button[type="submit"]:hover {
     cursor: pointer;
     text-align: left;
     padding: 0;
+    align-self:end;
 }
 .forgot-link:hover {
     color: #0056b3;
